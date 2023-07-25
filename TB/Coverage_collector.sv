@@ -26,9 +26,10 @@ class Coverage_collector  extends uvm_subscriber #(UART_seq_item);
         wr_uart_cov: coverpoint item.wr_uart ;
 
         w_data_cov: coverpoint item.w_data[7:0]{
-
-            wildcard bins wdata_with_odd_parity =  {8'bxxxxxxx0} ;
-            wildcard bins wdata_with_even_parity = {8'bxxxxxxx1};
+             
+            
+             bins wdata_with_odd_parity =  {[127:0]} iff ($countones(item.w_data)%2==1); 
+             bins wdata_with_even_parity = {[127:0]} iff ($countones(item.w_data)%2==0);
 
                          }
 
@@ -39,10 +40,10 @@ class Coverage_collector  extends uvm_subscriber #(UART_seq_item);
 
         r_data_cov: coverpoint item.r_data[7:0] {
 
-           wildcard bins rdata_with_odd_parity =  {8'bxxxxxxx0}  ;
-           wildcard bins rdata_with_even_parity =  {8'bxxxxxxx1} ;
+            bins rdata_with_odd_parity =  {[127:0]} iff ($countones(item.r_data)%2==1)  ;
+            bins rdata_with_even_parity =  {[127:0]} iff ($countones(item.r_data)%2==0) ;
 
-                            } 
+                            }
   
 
 	 cross_rd_wr: cross rd_uart_cov , wr_uart_cov ;
